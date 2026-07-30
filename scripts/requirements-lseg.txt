@@ -1,0 +1,10 @@
+# Dependencies for the ISOLATED .venv-lseg environment only.
+#
+# Do NOT install these into the main environment: lseg-data pins pandas<3 and
+# will downgrade the screener's pandas 3.x out from under it. See scripts/lseg.ps1.
+#
+#   python -m venv .venv-lseg
+#   .\.venv-lseg\Scripts\python.exe -m pip install -r scripts\requirements-lseg.txt
+
+lseg-data==2.1.1
+pyarrow>=25.0.0   # parquet writes into data/cache/refinitiv/, read by the main env

@@ -1,0 +1,12 @@
+{
+  "sessions": {
+    "default": "desktop.workspace",
+    "platform": {
+      "rdp": {
+        "app-key": "${REFINITIV_APP_KEY}",
+        "client_id": "${REFINITIV_CLIENT_ID}",
+        "client_secret": "${REFINITIV_CLIENT_SECRET}"
+      }
+    }
+  }
+}

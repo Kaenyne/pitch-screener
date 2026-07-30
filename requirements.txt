@@ -1,0 +1,10 @@
+# Main environment. The optional LSEG/Refinitiv client is NOT here on purpose —
+# it pins pandas<3 and lives in its own venv (see scripts/requirements-lseg.txt
+# and scripts/lseg.ps1). The screener runs fully without it.
+numpy
+pandas>=2.0
+pyarrow
+requests
+scipy
+yfinance
+pytest

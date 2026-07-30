@@ -1,0 +1,17 @@
+# regenerable / bulky — see README "Housekeeping"
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv*/
+venv/
+
+# data pulls + caches (~3 GB EDGAR zips, parquet caches)
+data/
+
+# run outputs (CSVs, tear sheets, replays, diagnostics)
+output/
+
+# local scratch
+scratch/
+reports/
+*.log
