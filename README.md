@@ -1,8 +1,60 @@
 # Stock Pitch Competition Screener
 
-Implementation of `SCREENER_SPEC.md` v2 (all 38 findings of the 2026-07
-methodology audit folded in). Idea generator for manual research — **not** a
-decision engine, not a backtester.
+A turnaround-first long/short **idea generator** for stock pitch competitions.
+It builds the full $1–20B US universe from SEC EDGAR's bulk XBRL data, scores
+every company on fundamental inflection (longs) and forensic red flags
+(shorts), and writes ranked shortlists, discovery cohorts, and per-name tear
+sheets — a starting point for manual research, **not** a decision engine and
+not a backtester.
+
+This is an implementation of `SCREENER_SPEC.md` v2 (all 38 findings of the
+2026-07 methodology audit in `METHODOLOGY_AUDIT.md` folded in). Those two
+documents are the methodology; the code follows them line by line.
+
+## What it does
+
+- **Universe**: every US-listed name with $1–20B market cap, built from
+  EDGAR's `companyfacts.zip` + `submissions.zip` bulk data with entity
+  hygiene (dual-class dedup, shells, foreign filers).
+- **Fundamentals**: raw XBRL facts are converted to clean discrete quarters
+  (Q4 derivation, YTD differencing, restatement dedup) through per-period
+  tag-fallback ladders, then to TTM/YoY series.
+- **Long side**: an inflection engine (level/slope/trough shape detection,
+  peak-recency, cost-cut haircuts) plus moat/ROIC-WACC, Piotroski F-Score,
+  and survivability metrics.
+- **Short side**: forensic signals — Beneish M-Score, Sloan accruals, revenue
+  deceleration, serial dilution, buyback behavior, filing-event flags (NT
+  filings, auditor changes, non-reliance 8-Ks), short-interest shape.
+- **Market layer**: prices, betas, drawdowns and short interest via yfinance;
+  risk-free rate and PPI/CPI via FRED.
+- **Outputs**: composite-ranked long/short shortlists, plus ~15 archetype
+  "discovery cohort" CSVs that surface names the composites structurally
+  can't reward, and Tier 1/Tier 2 markdown tear sheets per name.
+
+Everything is cache-first and reproducible: a full run persists every raw
+feature row, so iterating on scoring re-ranks the whole universe in ~1 second,
+and the point-in-time replay harness can re-run the screen as of any past date
+(facts, filings, prices, and FRED all truncated to what existed then).
+
+## Quickstart
+
+```bash
+git clone https://github.com/Kaenyne/pitch-screener.git
+cd pitch-screener
+pip install -r requirements.txt
+```
+
+Two one-time config items:
+
+1. **EDGAR User-Agent** — the SEC requires a real name + email on bulk
+   requests. Set `EDGAR_USER_AGENT` in `screener/config.py` (or the env var).
+2. **FRED API key** — free, instant:
+   <https://fred.stlouisfed.org/docs/api/api_key.html>. Set the
+   `FRED_API_KEY` env var.
+
+The optional Refinitiv/LSEG layer (`screener/refinitiv.py`, `scripts/lseg.ps1`)
+adds IBES estimate data if you have a Workspace entitlement; the screener runs
+fully without it.
 
 ## Layout
 
